@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Chat</title>
+    <style>
+        html {
+            min-width: 550px;
+        }
+        body {
+            width: 100%;
+            background: #adadad;
+        }
+
+        .container {
+            width: 80%;
+            margin: 0 auto;
+        }
+
+        .chat-window {
+            border: 1px solid black;
+            border-radius: 5px;
+            background: #FFF;
+            padding: 5px;
+            height: 400px;
+            overflow-y: auto;
+        }
+
+        .chat-window .message-own {
+            padding: 6px;
+            margin-left: 20%;
+            width: 78%;
+            border-radius: 7px 7px 0 7px;
+            background-color: #00d6b2;
+            margin-top: 2px;
+        }
+
+        .chat-window .message-other {
+            padding: 6px;
+            margin-right: 20%;
+            width: 78%;
+            border-radius: 7px 7px 7px 0;
+            background-color: #ffc520;
+            margin-top: 2px;
+        }
+
+        .chat-window .message-system {
+            color: #adadad;
+            font-weight: bold;
+            opacity: 0.8;
+        }
+
+        .chat-window .nickname {
+            font-weight: bold;
+            margin-right: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="chat-window">
+            <div class="message-system"><span class="nickname">System:</span>You are currently in the main room</div>
+            <div class="message-other"><span class="nickname">pepe:</span>Hola man, como andás?</div>
+        </div>
+        <form name="chat-form">
+            <input type="text" name="message" class="messageInput"/><button type="submit">Send</button>
+        </form>
+    </div>
+
+    <script src="/jquery/dist/jquery.min.js"></script>
+    <script src="/socket.io/lib/socket.js"></script>
+    <script src="/handlebars/handlebars.min.js"></script>
+    <script id="message-template" type="text/x-handlebars-template">
+        <div class="message-{{owner}}">
+            <span class="nickname">{{nickname}}:</span>{{message}}
+        </div>
+    </script>
+    <script>
+        var $chatWindow = jQuery(".chat-window"),
+            messageTemplate = Handlebars.compile(jQuery("#message-template").text());
+
+        if (!localStorage.getItem("nickname")) {
+            localStorage.setItem("nickname", "pablo");
+        }
+
+        jQuery(document.forms[0]).on("submit", function (e) {
+            var message;
+            var messageInput = e.target.message;
+            var messageElem;
+            e.preventDefault();
+            e.stopPropagation();
+
+            message = {
+                message: messageInput.value,
+                owner: "own",
+                nickname: localStorage.getItem("nickname")
+            };
+
+            messageInput.value = "";
+
+            messageElem = jQuery(messageTemplate(message));
+
+            $chatWindow.append(messageElem);
+            $chatWindow.scrollTop($chatWindow.position().top + messageElem.position().top);
+        });
+    </script>
+</body>
+</html>

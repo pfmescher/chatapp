@@ -1,0 +1,23 @@
+{
+  "name": "chatapp",
+  "version": "0.0.1",
+  "homepage": "https://github.com/pfmescher/chatapp",
+  "authors": [
+    "Pablo F. Mescher <pfmescher@gmail.com>"
+  ],
+  "description": "a chat app",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "handlebars": "~3.0.0",
+    "jquery": "~2.1.3",
+    "socket.io": "~1.3.5"
+  }
+}
