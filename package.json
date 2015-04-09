@@ -1,0 +1,12 @@
+{
+  "name": "chatapp",
+  "version": "0.0.1",
+  "main": "app.js",
+  "dependencies": {
+    "mongodb": "^2.0.27",
+    "socket.io": "^1.3.5"
+  },
+  "devDependencies": {
+    "gulp": "^3.8.11"
+  }
+}
