@@ -53,6 +53,7 @@
         .chat-window .nickname {
             font-weight: bold;
             margin-right: 4px;
+            vertical-align: top;
         }
     </style>
 </head>
@@ -65,60 +66,18 @@
         </form>
     </div>
 
-    <script src="/bower/jquery/dist/jquery.min.js"></script>
-    <script src="/socket.io/socket.io.js"></script>
-    <script src="/bower/handlebars/handlebars.min.js"></script>
+    <!-- Handlebars templates -->
     <script id="message-template" type="text/x-handlebars-template">
         <div class="message-{{owner}}">
             <span class="nickname">{{nickname}}:</span>{{message}}
         </div>
     </script>
-    <script>
-        var $chatWindow = jQuery(".chat-window"),
-            messageTemplate = Handlebars.compile(jQuery("#message-template").text());
 
-        function Message(message, owner, nickname) {
-            this.message = message;
-            this.owner = owner;
-            this.nickname = nickname;
-        }
-
-        Message.prototype.toJson = function () {
-            return JSON.stringify(this);
-        };
-
-
-        if (!localStorage.getItem("nickname")) {
-            localStorage.setItem("nickname", "pablo");
-        }
-
-        var socket = io();
-
-        jQuery(document.forms[0]).on("submit", function (e) {
-            var message;
-            var messageInput = e.target.message;
-            e.preventDefault();
-            e.stopPropagation();
-
-            message = new Message(messageInput.value, "own", localStorage.getItem("nickname"));
-
-            messageInput.value = "";
-
-            addMessage(message);
-
-            socket.emit("chat message", message);
-        });
-
-        socket.on("chat message", function (m) {
-            addMessage(m);
-        });
-
-        function addMessage(message) {
-            var messageElem = jQuery(messageTemplate(message));
-
-            $chatWindow.append(messageElem);
-            $chatWindow.scrollTop($chatWindow.position().top + messageElem.position().top);
-        }
-    </script>
+    <!-- Scripts -->
+    <script src="/bower/jquery/dist/jquery.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/bower/handlebars/handlebars.min.js"></script>
+    <script src="/static/js/Message.js"></script>
+    <script src="/static/js/index.js"></script>
 </body>
 </html>
