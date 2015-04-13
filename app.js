@@ -50,22 +50,22 @@ io.use(socketioJwt.authorize({
 
 io.on('connection', function (socket) {
     console.log("A user connected");
-    clients.push(socket.id);
-    socket.join("main");
-    socket.in("main").emit("chat message", (new Message("You are currently on the main room", "system", undefined)));
 
-    socket.to("main").broadcast.emit("chat message",
+    clients.push(socket.id);
+
+    socket.to("main").broadcast.emit("chat message", "main",
         (new Message("User connected", "system"))
     );
 
     socket.on("chat message", function (room, message) {
         message.owner = "other";
-        socket.broadcast.to(room).emit("chat message", message);
+        socket.to(room).emit("chat message", room, message);
     });
 
     socket.on("change room", function (room) {
         socket.join(room);
-        socket.to(room).emit("You are now on the " + room + " room");
+        socket.emit("chat message", room,
+            (new Message("You are now on the " + room + " room", "system")));
     });
 
     socket.on("disconnect", function () {
