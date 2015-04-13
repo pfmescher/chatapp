@@ -1,4 +1,4 @@
-function Message(message, owner, nickname) {
+function Message(message, owner, nickname, room) {
     this.message = message;
     this.owner = owner;
     this.nickname = nickname;

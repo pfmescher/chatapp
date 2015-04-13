@@ -1,11 +1,9 @@
 var $chatWindow = jQuery(".chat-window"),
     messageTemplate = Handlebars.compile(jQuery("#message-template").text());
 
-if (!localStorage.getItem("nickname")) {
-    localStorage.setItem("nickname", "pablo");
-}
-
-var socket = io();
+var socket = io.connect("http://localhost:8080", {
+    query: "token=" + localStorage.getItem("token")
+});
 
 jQuery(document.forms[0]).on("submit", function (e) {
     var message;
@@ -24,14 +22,18 @@ jQuery(document.forms[0]).on("submit", function (e) {
 
     addMessage(message);
 
-    socket.emit("chat message", message);
+    socket.emit("chat message",localStorage.getItem('room'), message);
 });
 
 socket.on("chat message", function (m) {
     if (typeof m.message == "string") {
-        m = new Message(m.message, m.owner, m.nickname);
-    } else if (typeof m.message == "object"){
-        m = new Message(new Handlebars.SafeString(m.message.string), m.owner, m.nickname);
+        m = new Message(m.message, m.owner, m.nickname, m.room);
+    } else if (typeof m.message == "object") {
+        m = new Message(new Handlebars.SafeString(m.message.string), m.owner, m.nickname, m.room);
+    }
+
+    if (m.room && m.room !== localStorage.getItem("room")) {
+        localStorage.setItem("room", m.room);
     }
     addMessage(m);
 });
