@@ -11,27 +11,30 @@ jQuery(document.forms[0]).on("submit", function (e) {
     var message;
     var messageInput = e.target.message;
     var text = messageInput.value;
+    var match;
 
     e.preventDefault();
     e.stopPropagation();
 
-    if (text.match(/^\/giphy/)) {
-        $.getJSON("http://api.giphy.com/v1/stickers/random?api_key=dc6zaTOxFJmzC&tag=" + giphyEscape(text.split(" ").pop()),
+    if (match = text.match(/\/giphy ([\w\d ]+)/)) {
+        $.getJSON("http://api.giphy.com/v1/stickers/random?api_key=dc6zaTOxFJmzC&tag=" + giphyEscape(match[1]),
             null,
             function (data) {
-                callback("<img src='" + data.data.fixed_width_small_url + "'/>")
+                if (data.data.fixed_width_small_url) {
+                    callback(new Message(new Handlebars.SafeString("<img src='" + data.data.fixed_height_small_url + "' height='" + data.data.fixed_height_small_height + "'/>"),
+                    "own", localStorage.getItem("nickname")));
+                } else {
+                    addMessage(new Message("No image found for keyword " + match[1], "system"));
+                }
             });
     } else {
-        callback(text);
+        callback(new Message(text, "own", localStorage.getItem("nickname")));
     }
 
-    function callback(text) {
-        message = new Message(new Handlebars.SafeString(text), "own", localStorage.getItem("nickname"));
+    function callback(message) {
 
         messageInput.value = "";
-
         addMessage(message);
-
         socket.emit("chat message",localStorage.getItem('room'), message);
     }
 });
