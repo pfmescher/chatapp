@@ -1,7 +1,7 @@
 var $chatWindow = jQuery(".chat-window"),
     messageTemplate = Handlebars.compile(jQuery("#message-template").text());
 
-var socket = io.connect("http://localhost:8080", {
+var socket = io.connect({
     query: "token=" + sessionStorage.getItem("token") + "&nickame=" + sessionStorage.getItem("nickname")
 });
 
