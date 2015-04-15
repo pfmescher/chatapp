@@ -1,25 +1,26 @@
 var $loginForm = jQuery("form[name=login]");
-var data = {};
+var formData = {};
 
 $loginForm.on("submit", function (e) {
     e.preventDefault();
 
     $loginForm.serializeArray().forEach(function (field) {
-        data[field.name] = field.value;
+        formData[field.name] = field.value;
     });
 
     jQuery.ajax("/login", {
         method: "POST",
         dataType: "json",
-        data: data,
-        success: sucessfulLogin,
+        data: formData,
+        success: successfulLogin,
         error: loginError
     })
 });
 
-function successfulLogin (data) {
-    localStorage.setItem("token", data.token);
-    location.redirect("/");
+function successfulLogin (responseData) {
+    sessionStorage.setItem("nickname", responseData.nickname);
+    sessionStorage.setItem("token", responseData.token);
+    location.pathname = "/";
 }
 
 function loginError() {

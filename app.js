@@ -9,6 +9,7 @@ var clients = [];
 var Message = require("./static/js/Message");
 var jwt = require("jsonwebtoken");
 var socketioJwt = require("socketio-jwt");
+var bodyparser = require("body-parser");
 
 server.listen(config.port || 8080, "0.0.0.0");
 
@@ -20,33 +21,34 @@ app.get("/login", function (req, res, next) {
     res.sendFile(path.join(__dirname, "/views/login.html"));
 });
 
-app.post("/login", function (req, res, next) {
+app.post("/login", bodyparser.urlencoded({extended: false}), function (req, res, next) {
     res.send(JSON.stringify({
-        token: jwt.sign({"nickname": req.body.nickname}, config.secret, {expiresInMinutes: 720})
+        token: jwt.sign({"nickname": req.body.nickname}, config.secret, {expiresInMinutes: 720}),
+        nickname: req.body.nickname
     }));
-});
-
-//app.use(expressjwt({secret: config.secret}));
-
-app.use(function (err, req, res, next) {
-    if (err && err.name === "UnauthorizedError") {
-        req.redirect("/login");
-    } else {
-        next();
-    }
 });
 
 app.get('/', function (req, res) {
     res.sendFile(__dirname + '/views/index.html');
 });
 
+app.use(expressjwt({secret: config.secret}));
+
+app.use(function (err, req, res, next) {
+    if (err && err.name === "UnauthorizedError") {
+        res.redirect("/login");
+    } else {
+        next();
+    }
+});
+
+
 //socket.io code
-/*
 io.use(socketioJwt.authorize({
     secret: config.secret,
     handshake: true
 }));
-*/
+
 
 io.on('connection', function (socket) {
     console.log("A user connected");
