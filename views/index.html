@@ -3,68 +3,22 @@
 <head lang="en">
     <meta charset="UTF-8">
     <title>Chatapp</title>
-    <style>
-        html {
-            min-width: 550px;
-        }
-        body {
-            width: 100%;
-            background: #adadad;
-        }
-
-        .container {
-            width: 80%;
-            margin: 0 auto;
-        }
-
-        .chat-window {
-            border: 1px solid black;
-            border-radius: 5px;
-            background: #FFF;
-            padding: 5px;
-            height: 400px;
-            overflow-y: auto;
-        }
-
-        .chat-window .message-own {
-            padding: 6px;
-            margin-left: 20%;
-            width: 78%;
-            border-radius: 7px 7px 0 7px;
-            background-color: #00d6b2;
-            margin-top: 2px;
-        }
-
-        .chat-window .message-other {
-            padding: 6px;
-            margin-right: 20%;
-            width: 78%;
-            border-radius: 7px 7px 7px 0;
-            background-color: #ffc520;
-            margin-top: 2px;
-        }
-
-        .chat-window .message-system {
-            color: #adadad;
-            font-weight: bold;
-            opacity: 0.8;
-        }
-
-        .chat-window .nickname {
-            font-weight: bold;
-            margin-right: 4px;
-            vertical-align: top;
-        }
-    </style>
+    <link rel="stylesheet" href="../static/css/index.css">
 </head>
 <body>
     <div class="container">
+        <h1>Chat</h1>
         <div class="chat-window">
         </div>
         <form name="chat-form">
             <input type="text" name="message" class="messageInput" autocomplete="off"/><button type="submit">Send</button>
         </form>
+        <h2>Participantes</h2>
+        <ul class="participants-list">
+        </ul>
+
     </div>
+
 
     <!-- Handlebars templates -->
     <script id="message-template" type="text/x-handlebars-template">

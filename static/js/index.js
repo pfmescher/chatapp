@@ -1,18 +1,16 @@
 var $chatWindow = jQuery(".chat-window"),
-    messageTemplate = Handlebars.compile(jQuery("#message-template").text());
+    messageTemplate = Handlebars.compile(jQuery("#message-template").text()),
+    $participantsList = jQuery(".participants-list");
 
 var socket = io.connect({
     query: "token=" + sessionStorage.getItem("token") + "&nickame=" + sessionStorage.getItem("nickname")
 });
 
-socket.on("error", function(error) {
-    if (error.type == "UnauthorizedError" || error.code == "invalid_token") {
-        location.pathname = "/login";
-    }
-});
-
+//enter main room
+socket.emit("add user", sessionStorage.getItem("nickname"));
 socket.emit("change room", "main");
 
+//event listeners
 jQuery(document.forms[0]).on("submit", function (e) {
     var message;
     var messageInput = e.target.message;
@@ -22,7 +20,7 @@ jQuery(document.forms[0]).on("submit", function (e) {
     e.preventDefault();
     e.stopPropagation();
 
-    if (match = text.match(/\/giphy ([\w\d ]+)/)) {
+    if (match = text.match(/^\/giphy ([\w\d ]+)/)) {
         $.getJSON("http://api.giphy.com/v1/stickers/random?api_key=dc6zaTOxFJmzC&tag=" + giphyEscape(match[1]),
             null,
             function (data) {
@@ -41,27 +39,38 @@ jQuery(document.forms[0]).on("submit", function (e) {
 
         messageInput.value = "";
         addMessage(message);
-        socket.emit("chat message", sessionStorage.getItem('room'), message);
+        socket.emit("chat message", message);
     }
 });
 
-function giphyEscape(text) {
-    return encodeURIComponent(jQuery.trim(text).replace(" ", "-"));
-}
 
-socket.on("chat message", function (room, m) {
+socket.on("error", function(error) {
+    if (error.type == "UnauthorizedError" || error.code == "invalid_token") {
+        location.pathname = "/login";
+    }
+});
+
+socket.on("chat message", function (m) {
     if (typeof m.message == "string") {
         m = new Message(m.message, m.owner, m.nickname);
     } else if (typeof m.message == "object") {
         m = new Message(new Handlebars.SafeString(m.message.string), m.owner, m.nickname);
     }
 
-    if (room && room !== sessionStorage.getItem("room")) {
-        sessionStorage.setItem("room", room);
-    }
     addMessage(m);
 });
 
+socket.on("room changed", function (room, participants) {
+    sessionStorage.setItem("room", room);
+    debugger;
+    $participantsList.html("")
+    participants.forEach(function (participant) {
+        $participantsList.append("<li>" + participant + "</li>");
+    });
+});
+
+
+//helpers
 function addMessage(message) {
     if (!message.nickname) {
         message.nickname = message.owner[0].toUpperCase() + message.owner.substring(1);
@@ -75,4 +84,8 @@ function addMessage(message) {
 function changeRoom(room) {
     $chatWindow.html("");
     socket.emit("change room", room);
+}
+
+function giphyEscape(text) {
+    return encodeURIComponent(jQuery.trim(text).replace(" ", "-"));
 }

@@ -1,0 +1,67 @@
+html {
+    min-width: 550px;
+}
+body {
+    width: 100%;
+    background: #adadad;
+}
+
+.container {
+    width: 80%;
+    margin: 0 auto;
+}
+
+.chat-window {
+    border: 1px solid black;
+    border-radius: 5px;
+    background: #FFF;
+    padding: 5px;
+    height: 400px;
+    overflow-y: auto;
+}
+
+.chat-window .message-own {
+    padding: 6px;
+    margin-left: 20%;
+    width: 78%;
+    border-radius: 7px 7px 0 7px;
+    background-color: #00d6b2;
+    margin-top: 2px;
+}
+
+.chat-window .message-other {
+    padding: 6px;
+    margin-right: 20%;
+    width: 78%;
+    border-radius: 7px 7px 7px 0;
+    background-color: #ffc520;
+    margin-top: 2px;
+}
+
+.chat-window .message-system {
+    color: #adadad;
+    font-weight: bold;
+    opacity: 0.8;
+}
+
+.chat-window .nickname {
+    font-weight: bold;
+    margin-right: 4px;
+    vertical-align: top;
+}
+
+.participants-list {
+    width: 100%;
+    border: 1px solid black;
+    border-radius: 5px;
+    padding: 0;
+    margin: 0;
+    list-style-type: none;
+}
+
+.participants-list li {
+    background-color: #eeffff;
+}
+.participants-list li:nth-child(odd) {
+    background-color: #eadada;
+}
