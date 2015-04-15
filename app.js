@@ -11,7 +11,7 @@ var jwt = require("jsonwebtoken");
 var socketioJwt = require("socketio-jwt");
 var bodyparser = require("body-parser");
 
-server.listen(config.port || 8080, "0.0.0.0");
+server.listen(config.port || 8080);
 
 //Express code
 app.use("/bower", express.static(path.join(__dirname, "bower_components")));
