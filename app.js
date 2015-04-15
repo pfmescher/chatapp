@@ -60,7 +60,9 @@ io.use(socketioJwt.authorize({
 io.on('connection', function (socket) {
     var userAdded = false;
     socket.room = "main";
-    console.log("A user connected");
+
+    socket.emit("chat message", new Message("To join a new room type /join " +
+    "<roomname>. To insert a gif type /giphy <keyword>", "system"));
 
     socket.on("add user", function (nickname) {
         socket.nickname = nickname;

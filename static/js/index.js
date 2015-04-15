@@ -25,12 +25,15 @@ jQuery(document.forms[0]).on("submit", function (e) {
             null,
             function (data) {
                 if (data.data.fixed_width_small_url) {
-                    callback(new Message(new Handlebars.SafeString("<img src='" + data.data.fixed_height_small_url + 
-                        "' height='" + data.data.fixed_height_small_height + "'/>"), "own", sessionStorage.getItem("nickname")));
+                    callback(new Message(new Handlebars.SafeString("<img src='" + data.data.fixed_height_small_url +
+                    "' height='" + data.data.fixed_height_small_height + "'/>"), "own", sessionStorage.getItem("nickname")));
                 } else {
                     addMessage(new Message("No image found for keyword " + match[1], "system"));
                 }
             });
+    } else if (match = text.match(/^\/join ([\w\d ]+)/)) {
+        changeRoom(match[1]);
+        messageInput.value = "";
     } else {
         callback(new Message(text, "own", sessionStorage.getItem("nickname")));
     }
