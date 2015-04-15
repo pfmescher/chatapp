@@ -21,7 +21,7 @@ jQuery(document.forms[0]).on("submit", function (e) {
     e.stopPropagation();
 
     if (match = text.match(/^\/giphy ([\w\d ]+)/)) {
-        $.getJSON("http://api.giphy.com/v1/stickers/random?api_key=dc6zaTOxFJmzC&tag=" + giphyEscape(match[1]),
+        $.getJSON("//api.giphy.com/v1/stickers/random?api_key=dc6zaTOxFJmzC&tag=" + giphyEscape(match[1]),
             null,
             function (data) {
                 if (data.data.fixed_width_small_url) {
